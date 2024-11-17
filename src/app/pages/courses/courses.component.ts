@@ -1,4 +1,4 @@
-import { Component, effect, inject, Input, signal } from '@angular/core';
+import { Component, inject, input } from '@angular/core';
 import { Course } from '../../interfaces/course.interface';
 import { CourseService } from '../../services/course/course.service';
 
@@ -10,22 +10,9 @@ import { CourseService } from '../../services/course/course.service';
   styleUrl: './courses.component.scss',
 })
 export class CoursesComponent {
-  private courseService: CourseService = inject(CourseService);
-  courses = signal<Course[]>([]);
-  @Input() isAdmin: boolean = false;
-
-  constructor() {
-    effect(
-      () => {
-        const courses = this.courseService.coursesSignal();
-        if (courses !== this.courses()) {
-          this.courses.set(courses);
-          console.log(courses);
-        }
-      },
-      { allowSignalWrites: true }
-    );
-  }
+  courseService: CourseService = inject(CourseService);
+  isAdmin = input<boolean>(false);
+  constructor() {}
 
   ngOnInit(): void {}
 
