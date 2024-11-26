@@ -3,11 +3,20 @@ import { FormsModule, NgForm } from '@angular/forms';
 import { CoursesComponent } from '../courses/courses.component';
 import { CourseService } from '../../services/course/course.service';
 import { Course } from '../../interfaces/course.interface';
+import { HoverColorDirective } from '../../directives/hoverColor/hover-color.directive';
+import { NgClass, NgStyle, UpperCasePipe } from '@angular/common';
 
 @Component({
   selector: 'app-admin',
   standalone: true,
-  imports: [FormsModule, CoursesComponent],
+  imports: [
+    FormsModule,
+    CoursesComponent,
+    HoverColorDirective,
+    NgClass,
+    NgStyle,
+    UpperCasePipe,
+  ],
   templateUrl: './admin.component.html',
   styleUrl: './admin.component.scss',
 })
@@ -18,6 +27,7 @@ export class AdminComponent {
   cover = signal<string | null>(null);
   cover_file = signal<any>(null);
   showError = signal<boolean>(false);
+  isSaved = signal<boolean>(false);
 
   onFileSelected(event: any): void {
     const file = event.target.files[0];
@@ -58,6 +68,11 @@ export class AdminComponent {
       };
 
       await this.courseService.addCourse(data);
+
+      this.isSaved.set(true);
+      setTimeout(() => {
+        this.isSaved.set(false);
+      }, 1500);
       this.clearForm(form);
     } catch (err) {
       console.log(err);
